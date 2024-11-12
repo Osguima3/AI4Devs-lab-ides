@@ -1,0 +1,5 @@
+/* frontend/src/components/PersonalDetails.css */
+.personal-details {
+  display: flex;
+  flex-direction: column;
+}

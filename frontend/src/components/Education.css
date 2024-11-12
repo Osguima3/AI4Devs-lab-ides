@@ -1,0 +1,14 @@
+/* frontend/src/components/Education.css */
+.education {
+  display: flex;
+  flex-direction: column;
+}
+
+.education-entry {
+  margin-bottom: 20px;
+}
+
+.education-actions {
+  display: flex;
+  justify-content: flex-end;
+}

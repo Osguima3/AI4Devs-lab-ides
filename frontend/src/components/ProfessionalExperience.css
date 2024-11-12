@@ -1,0 +1,14 @@
+/* frontend/src/components/ProfessionalExperience.css */
+.professional-experience {
+  display: flex;
+  flex-direction: column;
+}
+
+.experience-entry {
+  margin-bottom: 20px;
+}
+
+.experience-actions {
+  display: flex;
+  justify-content: flex-end;
+}
