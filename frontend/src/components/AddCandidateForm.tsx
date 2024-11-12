@@ -1,5 +1,5 @@
 // frontend/src/components/AddCandidateForm.tsx
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Stepper, Step, StepLabel, Button, Typography, Box, Link } from '@mui/material';
 import PersonalDetails from './PersonalDetails';
@@ -14,8 +14,43 @@ const AddCandidateForm: React.FC = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
   const navigate = useNavigate();
+  const formRef = useRef<HTMLFormElement>(null);
+  const formikRef = useRef<any>(null);
 
   const handleNext = () => {
+    if (formikRef.current) {
+      formikRef.current.validateForm().then((errors: any) => {
+        if (Object.keys(errors).length === 0) {
+          formikRef.current.handleSubmit();
+        } else {
+          formikRef.current.setTouched({
+            firstName: true,
+            lastName: true,
+            email: true,
+            phone: true,
+            address: true,
+            experiences: errors.experiences ? errors.experiences.map(() => ({
+              company: true,
+              role: true,
+              startDate: true,
+              endDate: true,
+              description: true,
+            })) : [],
+            educationEntries: errors.educationEntries ? errors.educationEntries.map(() => ({
+              institution: true,
+              degree: true,
+              startDate: true,
+              endDate: true,
+              description: true,
+            })) : [],
+            file: true,
+          });
+        }
+      });
+    }
+  };
+
+  const handleStepNext = () => {
     if (activeStep === steps.length - 1) {
       // Aquí puedes añadir la lógica para enviar los datos al servidor
       // Simularemos una respuesta exitosa
@@ -74,10 +109,12 @@ const AddCandidateForm: React.FC = () => {
             <Typography variant="h6" gutterBottom className="step-title">
               {steps[activeStep]}
             </Typography>
-            {activeStep === 0 && <PersonalDetails />}
-            {activeStep === 1 && <ProfessionalExperience />}
-            {activeStep === 2 && <Education />}
-            {activeStep === 3 && <UploadCV />}
+            <form ref={formRef}>
+              {activeStep === 0 && <PersonalDetails handleNext={handleStepNext} formikRef={formikRef} />}
+              {activeStep === 1 && <ProfessionalExperience handleNext={handleStepNext} formikRef={formikRef} />}
+              {activeStep === 2 && <Education handleNext={handleStepNext} formikRef={formikRef} />}
+              {activeStep === 3 && <UploadCV handleNext={handleStepNext} formikRef={formikRef} />}
+            </form>
             <div className="form-buttons">
               <Button onClick={handleBack}>
                 Atrás
